@@ -185,8 +185,23 @@ function makeWord(lettersObject) {
  *    sellTickets([25, 25, 50]) => true
  *    sellTickets([25, 100]) => false (The seller does not have enough money to give change.)
  */
-function sellTickets(/* queue */) {
-  throw new Error('Not implemented');
+function sellTickets(queue) {
+  // throw new Error('Not implemented');
+  let res = true;
+  if (queue.length !== 0) {
+    const ticketCost = 25;
+    let acc = 0;
+    queue.forEach((bill) => {
+      const delta = bill - ticketCost;
+
+      if (delta !== 0) {
+        res = delta <= acc;
+      } else {
+        acc += ticketCost;
+      }
+    });
+  }
+  return res;
 }
 
 /**
@@ -202,8 +217,14 @@ function sellTickets(/* queue */) {
  *    console.log(r.height);      // => 20
  *    console.log(r.getArea());   // => 200
  */
-function Rectangle(/* width, height */) {
-  throw new Error('Not implemented');
+function Rectangle(width, height) {
+  return {
+    width,
+    height,
+    getArea() {
+      return width * height;
+    },
+  };
 }
 
 /**
@@ -216,8 +237,8 @@ function Rectangle(/* width, height */) {
  *    [1,2,3]   =>  '[1,2,3]'
  *    { width: 10, height : 20 } => '{"height":10,"width":20}'
  */
-function getJSON(/* obj */) {
-  throw new Error('Not implemented');
+function getJSON(obj) {
+  return JSON.stringify(obj);
 }
 
 /**
@@ -231,8 +252,33 @@ function getJSON(/* obj */) {
  *    const r = fromJSON(Circle.prototype, '{"radius":10}');
  *
  */
+const Circle = function Circle(radius) {
+  this.radius = radius;
+};
+
+Circle.prototype.getCircumference = function getCircumference() {
+  return 2 * Math.PI * this.radius;
+};
+
 function fromJSON(/* proto, json */) {
   throw new Error('Not implemented');
+  // const properties = Object.entries(JSON.parse(json));
+  // Object.defineProperties(proto, JSON.parse(json));
+
+  // properties.forEach(([key, value]) => {
+  //   Object.defineProperty(proto, key, { value });
+  // });
+  // const keys = Object.keys(JSON.parse(json));
+  // const values = Object.values(JSON.parse(json));
+  //
+  // const newClass = class extends proto {
+  //   constructor(...keys) {
+  //     super(...keys);
+  //   }
+  // };
+  //
+  // const mm = new newClass(...values);
+  // return new proto;
 }
 
 /**
@@ -261,8 +307,13 @@ function fromJSON(/* proto, json */) {
  *      { country: 'Russia',  city: 'Saint Petersburg' }
  *    ]
  */
-function sortCitiesArray(/* arr */) {
-  throw new Error('Not implemented');
+function sortCitiesArray(arr) {
+  return arr.sort((a, b) => {
+    if (a.country.toLowerCase() !== b.country.toLowerCase()) {
+      return a.country.toLowerCase() < b.country.toLowerCase() ? -1 : 1;
+    }
+    return a.city.toLowerCase() < b.city.toLowerCase() ? -1 : 1;
+  });
 }
 
 /**
