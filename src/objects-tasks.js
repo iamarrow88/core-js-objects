@@ -346,8 +346,19 @@ function sortCitiesArray(arr) {
  *    "Poland" => ["Lodz"]
  *   }
  */
-function group(/* array, keySelector, valueSelector */) {
-  throw new Error('Not implemented');
+function group(array, keySelector, valueSelector) {
+  const res = array.reduce((acc, item) => {
+    const key = keySelector(item);
+    const value = valueSelector(item);
+    if (acc[key]) {
+      acc[key].push(value);
+    } else {
+      acc[key] = [value];
+    }
+    return acc;
+  }, {});
+
+  return new Map(Object.entries(res));
 }
 
 /**
@@ -405,32 +416,78 @@ function group(/* array, keySelector, valueSelector */) {
  */
 
 const cssSelectorBuilder = {
-  element(/* value */) {
-    throw new Error('Not implemented');
+  string: '',
+  stringify() {
+    const res = this.string;
+    this.string = '';
+    this.idCounter = 0;
+    this.elementCounter = 0;
+    this.pseudoElementCounter = 0;
+    return res;
+  },
+  elementCounter: 0,
+  element(value) {
+    // throw new Error('Not implemented');
+    if (this.elementCounter >= 1) {
+      throw new Error(
+        'Element, id and pseudo-element should not occur more then one time inside the selector'
+      );
+    } else {
+      this.string += value;
+      this.elementCounter += 1;
+      return this;
+    }
   },
 
-  id(/* value */) {
-    throw new Error('Not implemented');
+  idCounter: 0,
+  id(value) {
+    // throw new Error('Not implemented');
+    if (this.idCounter >= 1) {
+      throw new Error(
+        'Element, id and pseudo-element should not occur more then one time inside the selector'
+      );
+    } else {
+      this.string += `#${value}`;
+      this.idCounter += 1;
+      return this;
+    }
   },
 
-  class(/* value */) {
-    throw new Error('Not implemented');
+  class(value) {
+    // throw new Error('Not implemented');
+    this.string += `.${value}`;
+    return this;
   },
 
-  attr(/* value */) {
-    throw new Error('Not implemented');
+  attr(value) {
+    // throw new Error('Not implemented');
+    this.string += `[${value}]`;
+    return this;
   },
 
-  pseudoClass(/* value */) {
-    throw new Error('Not implemented');
+  pseudoClass(value) {
+    // throw new Error('Not implemented');
+    this.string += `:${value}`;
+    return this;
   },
 
-  pseudoElement(/* value */) {
-    throw new Error('Not implemented');
+  pseudoElementCounter: 0,
+  pseudoElement(value) {
+    // throw new Error('Not implemented');
+    if (this.idCounter >= 1) {
+      throw new Error(
+        'Element, id and pseudo-element should not occur more then one time inside the selector'
+      );
+    } else {
+      this.string += `::${value}`;
+      this.pseudoElementCounter += 1;
+      return this;
+    }
   },
 
-  combine(/* selector1, combinator, selector2 */) {
-    throw new Error('Not implemented');
+  combine(selector1, combinator, selector2) {
+    // throw new Error('Not implemented');
+    return selector1 + combinator + selector2;
   },
 };
 
